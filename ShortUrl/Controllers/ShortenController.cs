@@ -1,40 +1,23 @@
-﻿using System;
-using System.Web.Mvc;
-using ShortUrl.Models;
+﻿using System.Web.Mvc;
+
+using ShortUrl.Services;
 
 namespace ShortUrl.Controllers
 {
     public class ShortenController : Controller
     {
-        public ShortenController(IRepository<ShortenedUrl> repository)
+        private readonly IShortUrlService service;
+
+        public ShortenController(IShortUrlService service)
         {
-            
+            this.service = service;
         }
 
         [HttpPost]
         public ActionResult Index(string url)
         {
-            var shortUrl = new Models.ShortenedUrl
-            {
-                Id = 1,
-                Created = DateTime.UtcNow,
-                Url = url
-            };
-
-            return Content($"Shortening '{shortUrl.Url}' to {shortUrl.Id}");
-        }
-
-        [HttpPost]
-        public ActionResult Debug(string url)
-        {
-            var shortUrl = new Models.ShortenedUrl
-            {
-                Id = 1,
-                Created = DateTime.UtcNow,
-                Url = url
-            };
-
-            return Content($"Shortening '{shortUrl.Url}' to {shortUrl.Id}");
+            var id = this.service.Create(url);
+            return this.Content($"Shortening '{url}' to {id}");
         }
     }
 }

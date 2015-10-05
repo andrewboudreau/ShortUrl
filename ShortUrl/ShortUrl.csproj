@@ -149,6 +149,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
+    <Compile Include="Services\IShortUrlService.cs" />
     <Compile Include="Controllers\ShortenController.cs" />
     <Compile Include="Controllers\ExpandController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
