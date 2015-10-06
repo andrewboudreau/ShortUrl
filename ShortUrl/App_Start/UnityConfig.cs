@@ -1,6 +1,9 @@
 using System;
 using Microsoft.Practices.Unity;
 
+using ShortUrl.Services;
+using ShortUrl.Services.EntityFramework;
+
 // ReSharper disable once CheckNamespace
 namespace ShortUrl.App_Start
 {
@@ -30,7 +33,7 @@ namespace ShortUrl.App_Start
         /// change the defaults), as Unity allows resolving a concrete type even if it was not previously registered.</remarks>
         public static void RegisterTypes(IUnityContainer container)
         {
-            //container.RegisterType<IShortUrlService, ShortUrlService>();
+            container.RegisterType<IShortUrlService, ShortUrlService>(new PerRequestLifetimeManager());
         }
     }
 }

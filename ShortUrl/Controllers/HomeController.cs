@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using ShortUrl.Models;
+using ShortUrl.Services.EntityFramework;
 
 namespace ShortUrl.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            ViewBag.Recent = new List<ShortenedUrl>();
+            var context = new ShortUrlService();
+
+            var id = await context.CreateAsync("http://www.google.com");
+
+            ViewBag.Recent = await context.RecentShortenedUrls();
             ViewBag.Recent.Add(new ShortenedUrl { Id = 1, Url = "http://www.google.com", Created = DateTime.Now });
             ViewBag.Recent.Add(new ShortenedUrl { Id = 2, Url = "http://www.google.com?2", Created = DateTime.Now });
             ViewBag.Recent.Add(new ShortenedUrl { Id = 3, Url = "http://www.google.com?3", Created = DateTime.Now });

@@ -1,5 +1,5 @@
 ﻿@using ShortUrl.Models
-@model IList<ShortenedUrl>
+@model ShortUrl.Models.ShortenedUrl
 
 @{
     ViewBag.Title = "Url Shortener";
@@ -10,7 +10,7 @@
     <form id="Shorten" action="@Url.Action("Index", "Shorten")">
         <p class="lead">
             <div class="form-group">
-                @Html.TextBoxFor(m => m.Url, new { @class = "form-control", style = "width:100%", placeholder = "enter a valid url" })
+                @Html.TextBoxFor(m => m.Url, new { @class = "form-control", placeholder = "enter a valid url" })
                 @Html.ValidationMessageFor(m => m.Url)
             </div>
         </p>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using ShortUrl.Models;
 
@@ -6,10 +7,10 @@ namespace ShortUrl.Services
 {
     public interface IShortUrlService
     {
-        ShortenedUrl Find(int id);
+        Task<ShortenedUrl> GetAsync(int id);
 
-        int Create(string url);
+        Task<int> CreateAsync(string url);
 
-        IList<ShortenedUrl> Top100();
+        Task<List<ShortenedUrl>> RecentShortenedUrls();
     }
 }
