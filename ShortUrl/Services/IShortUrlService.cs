@@ -8,7 +8,7 @@ namespace ShortUrl.Services
 {
     public interface IShortUrlService
     {
-        Task<ShortenedUrl> GetShortenedUrlAsync(int id);
+        Task<ShortenedUrl> FindUrlByIdAsync(int id);
 
         Task<int> ShortenUrlAsync(string url);
 

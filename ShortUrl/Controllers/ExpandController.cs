@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using ShortUrl.Services;
 
@@ -16,7 +15,7 @@ namespace ShortUrl.Controllers
 
         public async Task<ActionResult> Index(int id)
         {
-            var url = await service.GetShortenedUrlAsync(id);
+            var url = await service.FindUrlByIdAsync(id);
             if (url == null)
             {
                 return HttpNotFound();

@@ -67,7 +67,7 @@ namespace ShortUrl.Services.EntityFramework
         /// </summary>
         /// <param name="id">shortened url id</param>
         /// <returns>details of a specific shortened url</returns>
-        public Task<ShortenedUrl> GetShortenedUrlAsync(int id)
+        public Task<ShortenedUrl> FindUrlByIdAsync(int id)
         {
             return Set<ShortenedUrl>().FindAsync(id);
         }
