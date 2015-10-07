@@ -14,10 +14,10 @@
 
 <div class="jumbotron">
     <h1>Shorten Url</h1>
-    <form id="Shorten" action="@Url.Action("Index", "Shorten")" method="POST">
+    <form id="Shorten" action="@Url.Action("Index", "Shorten")" method="POST" autocomplete="off">
         <p class="lead">
             <div class="form-group">
-                @Html.TextBoxFor(m => m.Url, new { @class = "form-control", placeholder = "enter a valid url" })
+                @Html.TextBoxFor(m => m.Url, new { @class = "form-control", placeholder = "enter a valid url", autocomplete = "off" })
                 @Html.ValidationMessageFor(m => m.Url)
             </div>
         </p>
