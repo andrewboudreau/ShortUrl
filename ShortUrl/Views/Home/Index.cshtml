@@ -1,13 +1,20 @@
 ﻿@using ShortUrl.Models
-@model ShortUrl.Models.ShortenedUrl
+@model ShortenedUrl
 
 @{
     ViewBag.Title = "Url Shortener";
 }
 
+@helper TimeAgoInWords(DateTime dateTime)
+{
+    <time class="timeago" datetime="@dateTime.ToString("yyyy-MM-ddTHH:mm:ssK")" title="@dateTime.ToString("f")">
+        @dateTime.ToString("f")
+    </time>
+}
+
 <div class="jumbotron">
     <h1>Shorten Url</h1>
-    <form id="Shorten" action="@Url.Action("Index", "Shorten")">
+    <form id="Shorten" action="@Url.Action("Index", "Shorten")" method="POST">
         <p class="lead">
             <div class="form-group">
                 @Html.TextBoxFor(m => m.Url, new { @class = "form-control", placeholder = "enter a valid url" })
@@ -26,21 +33,18 @@
                 <th>Url</th>
                 <th>ShortUrl</th>
                 <th>Created</th>
-                <th>Visits</th>
+                @*<th>Visits</th>*@
             </tr>
             @foreach (ShortenedUrl item in ViewBag.Recent)
             {
                 <tr>
-                    <td>item.Url</td>
-                    <td>item.Id</td>
-                    <td>item.Created</td>
-                    <td>0</td>
+                    <td><a target="_blank" href="@item.Url">@item.Url</a></td>
+                    <td><a target="_blank" href="@Url.Action("Index", "Expand", new { id = item.Id })">/@item.Id</a></td>
+                    <td>@TimeAgoInWords(item.Created)</td>
+                    @*<td>0</td>*@
                 </tr>
             }
         </table>
-        <p>
-            <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a>
-        </p>
     </div>
 </div>
 

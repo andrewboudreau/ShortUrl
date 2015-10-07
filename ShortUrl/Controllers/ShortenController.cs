@@ -15,10 +15,11 @@ namespace ShortUrl.Controllers
         }
 
         [HttpPost]
+        [Route("Shorten")]
         public async Task<ActionResult> Index(string url)
         {
-            var id = await service.CreateAsync(url);
-            return Content($"Shortening '{url}' to {id}");
+            await service.ShortenUrlAsync(url);
+            return RedirectToAction("Index", "Home");
         }
     }
 }

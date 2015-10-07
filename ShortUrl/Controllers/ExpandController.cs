@@ -1,16 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using ShortUrl.Services;
 
 namespace ShortUrl.Controllers
 {
     public class ExpandController : Controller
     {
-        public ActionResult Index(int id)
+        private readonly IShortUrlService service;
+
+        public ExpandController(IShortUrlService service)
         {
-            return Content(id.ToString());
+            this.service = service;
+        }
+
+        public async Task<ActionResult> Index(int id)
+        {
+            var url = await service.GetShortenedUrlAsync(id);
+            if (url == null)
+            {
+                return HttpNotFound();
+            }
+
+            await service.AddVisitorAsync(id, Request.Headers, Request.UserAgent);
+            if (url.Url.StartsWith("http"))
+            {
+                return Redirect(url.Url);
+            }
+
+            return Redirect("http://" + url.Url);
         }
 
         public ActionResult Debug(int id)

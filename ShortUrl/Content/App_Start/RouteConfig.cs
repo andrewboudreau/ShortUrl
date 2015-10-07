@@ -8,10 +8,11 @@ namespace ShortUrl
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
                 name: "Expand",
-                url: "{id}/{action}",
+                url: "{id}",
                 defaults: new { controller = "Expand", action = "Index" },
                 constraints: new { id = new PositiveIntegerRouteConstraint() });
 

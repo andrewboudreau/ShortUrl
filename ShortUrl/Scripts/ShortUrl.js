@@ -16,8 +16,11 @@
         };
 
         urlInput
-            .on("keyup", updateSubmitButtonState)
+            .on("change keyup blur focus", updateSubmitButtonState)
             .focus();
     }
+
+    // http://timeago.yarp.com/
+    $("time.timeago").timeago();
 
 })(jQuery, window);

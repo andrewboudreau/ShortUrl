@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Specialized;
+using System.Linq;
 using System.Threading.Tasks;
 
 using ShortUrl.Models;
@@ -7,10 +8,12 @@ namespace ShortUrl.Services
 {
     public interface IShortUrlService
     {
-        Task<ShortenedUrl> GetAsync(int id);
+        Task<ShortenedUrl> GetShortenedUrlAsync(int id);
 
-        Task<int> CreateAsync(string url);
+        Task<int> ShortenUrlAsync(string url);
 
-        Task<List<ShortenedUrl>> RecentShortenedUrls();
+        IQueryable<ShortenedUrl> RecentShortenedUrls();
+
+        Task AddVisitorAsync(int id, NameValueCollection headers, string userAgent);
     }
 }
