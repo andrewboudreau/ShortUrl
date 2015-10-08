@@ -10,10 +10,12 @@ namespace ShortUrl.Services
     {
         Task<ShortenedUrl> FindUrlByIdAsync(int id);
 
+        Task DeleteUrlByIdAsync(int id);
+
         Task<int> ShortenUrlAsync(string url);
 
         IQueryable<ShortenedUrl> RecentShortenedUrls();
-
+        
         Task AddVisitorAsync(int id, NameValueCollection headers, string userAgent);
     }
 }

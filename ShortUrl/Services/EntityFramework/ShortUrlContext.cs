@@ -23,6 +23,17 @@ namespace ShortUrl.Services.EntityFramework
         public DbSet<Visitor> Visitors { get; set; }
 
         #region IShortUrlService
+
+        public async Task DeleteUrlByIdAsync(int id)
+        {
+            var shortenedUrl = await Set<ShortenedUrl>().FindAsync(id);
+            if (shortenedUrl != null)
+            {
+                Set<ShortenedUrl>().Remove(shortenedUrl);
+                await SaveChangesAsync();
+            }
+        }S
+
         /// <summary>
         /// Shortens a url
         /// </summary>
@@ -32,13 +43,23 @@ namespace ShortUrl.Services.EntityFramework
         {
             var shortUrl = ShortenedUrls.Create();
             shortUrl.Created = DateTime.UtcNow;
-            shortUrl.Url = url;
+            shortUrl.Url = SanitizeUrl(url);
 
             ShortenedUrls.Add(shortUrl);
 
             await SaveChangesAsync();
 
             return shortUrl.Id;
+        }
+
+        private string SanitizeUrl(string url)
+        {
+            if (url.StartsWith("http"))
+            {
+                return url;
+            }
+
+            return "http://" + url;
         }
 
         /// <summary>
