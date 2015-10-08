@@ -23,7 +23,7 @@ namespace ShortUrl.Controllers
         }
 
         [HttpPost]
-        [Route("Delete")]
+        [Route("Delete/{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
             await service.DeleteUrlByIdAsync(id);
