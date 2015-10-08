@@ -18,6 +18,11 @@ namespace ShortUrl.Services.EntityFramework
             Database.SetInitializer(new CreateDatabaseIfNotExists<ShortUrlContext>());
         }
 
+        public ShortUrlContext() 
+            : base("DefaultConnection")
+        {
+        }
+
         public DbSet<ShortenedUrl> ShortenedUrls { get; set; }
 
         public DbSet<Visitor> Visitors { get; set; }

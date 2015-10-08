@@ -21,5 +21,13 @@ namespace ShortUrl.Controllers
             await service.ShortenUrlAsync(url);
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpPost]
+        [Route("Delete")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            await service.DeleteUrlByIdAsync(id);
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
