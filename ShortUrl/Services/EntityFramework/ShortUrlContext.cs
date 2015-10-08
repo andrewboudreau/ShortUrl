@@ -32,7 +32,7 @@ namespace ShortUrl.Services.EntityFramework
                 Set<ShortenedUrl>().Remove(shortenedUrl);
                 await SaveChangesAsync();
             }
-        }S
+        }
 
         /// <summary>
         /// Shortens a url
