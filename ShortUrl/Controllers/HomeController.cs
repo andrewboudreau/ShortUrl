@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Coordinator.Client;
-using ShortUrl.Services;
+using ShortUrl.Service;
 
 namespace ShortUrl.Controllers
 {
@@ -26,17 +26,16 @@ namespace ShortUrl.Controllers
                 throw new NullReferenceException("Request.Url cannot be null");
             }
 
-            ViewBag.RegisteredSites = await coordinator.RegisterSiteAsync(new Coordinator.Models.Site()
+            var site = new Coordinator.Models.Site
             {
-                Id = "shorturl",
+                Id = GetType().Assembly.GetName().Name,
                 Name = "ShortUrl",
-                Url =
-                    Request.Url.Scheme + Uri.SchemeDelimiter + Request.Url.Host +
-                    (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port)
+                Url = Request.Url.Scheme + Uri.SchemeDelimiter + Request.Url.Host + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port)
+            };
 
-            });
+            ViewBag.RegisteredSites = await coordinator.RegisterSiteAsync(site);
+            ViewBag.Recent = await service.RecentShortenedUrls();
 
-            ViewBag.Recent = await service.RecentShortenedUrls().ToListAsync();
             return View();
         }
     }

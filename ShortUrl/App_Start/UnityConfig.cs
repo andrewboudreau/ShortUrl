@@ -1,8 +1,7 @@
 using System;
 using Microsoft.Practices.Unity;
-
-using ShortUrl.Services;
-using ShortUrl.Services.EntityFramework;
+using ShortUrl.Service;
+using ShortUrl.Service.EntityFramework;
 
 namespace ShortUrl
 {

@@ -1,5 +1,4 @@
-﻿@using ShortUrl.Models
-@model ShortenedUrl
+﻿@model  ShortUrl.Models.ShortenedUrl
 
 @{
     ViewBag.Title = "Url Shortener";
@@ -38,7 +37,7 @@
                 <th>Created</th>
                 @*<th>Visits</th>*@
             </tr>
-            @foreach (ShortenedUrl item in ViewBag.Recent)
+            @foreach (var item in ViewBag.Recent)
             {
                 <tr>
                     <td><a target="_blank" href="@item.Url">@item.Url</a></td>

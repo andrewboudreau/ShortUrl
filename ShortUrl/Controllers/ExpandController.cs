@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using ShortUrl.Services;
+using ShortUrl.Service;
 
 namespace ShortUrl.Controllers
 {

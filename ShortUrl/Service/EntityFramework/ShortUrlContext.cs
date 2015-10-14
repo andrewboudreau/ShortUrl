@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-
 using ShortUrl.Models;
 
-namespace ShortUrl.Services.EntityFramework
+namespace ShortUrl.Service.EntityFramework
 {
     /// <summary>
     /// EntityFramework 6 persistance
@@ -18,7 +18,7 @@ namespace ShortUrl.Services.EntityFramework
             Database.SetInitializer(new CreateDatabaseIfNotExists<ShortUrlContext>());
         }
 
-        public ShortUrlContext() 
+        public ShortUrlContext()
             : base("DefaultConnection")
         {
         }
@@ -57,23 +57,13 @@ namespace ShortUrl.Services.EntityFramework
             return shortUrl.Id;
         }
 
-        private string SanitizeUrl(string url)
-        {
-            if (url.StartsWith("http"))
-            {
-                return url;
-            }
-
-            return "http://" + url;
-        }
-
         /// <summary>
         /// 100 recent shortened urls
         /// </summary>
         /// <returns></returns>
-        public IQueryable<ShortenedUrl> RecentShortenedUrls()
+        public Task<List<ShortenedUrl>> RecentShortenedUrls()
         {
-            return Set<ShortenedUrl>().OrderByDescending(x => x.Created).Take(20);
+            return Set<ShortenedUrl>().OrderByDescending(x => x.Created).Take(20).ToListAsync();
         }
 
         public async Task AddVisitorAsync(int id, NameValueCollection headers, string userAgent)
@@ -96,6 +86,16 @@ namespace ShortUrl.Services.EntityFramework
         public Task<ShortenedUrl> FindUrlByIdAsync(int id)
         {
             return Set<ShortenedUrl>().FindAsync(id);
+        }
+
+        private string SanitizeUrl(string url)
+        {
+            if (url.StartsWith("http"))
+            {
+                return url;
+            }
+
+            return "http://" + url;
         }
         #endregion
     }
