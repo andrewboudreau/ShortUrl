@@ -48,12 +48,12 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Coordinator.Client, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Coordinator.Client.1.0.6.0\lib\net46\Coordinator.Client.dll</HintPath>
+    <Reference Include="Coordinator.Client, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Coordinator.Client.1.0.8.0\lib\net46\Coordinator.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Coordinator.Models, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Coordinator.Client.1.0.6.0\lib\net46\Coordinator.Models.dll</HintPath>
+    <Reference Include="Coordinator.Models, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Coordinator.Client.1.0.8.0\lib\net46\Coordinator.Models.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">

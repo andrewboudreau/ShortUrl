@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+
 using Coordinator.Client;
 using ShortUrl.Service;
 
@@ -32,6 +32,7 @@ namespace ShortUrl.Controllers
                 Name = "ShortUrl",
                 Url = Request.Url.Scheme + Uri.SchemeDelimiter + Request.Url.Host + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port)
             };
+
 
             ViewBag.RegisteredSites = await coordinator.RegisterSiteAsync(site);
             ViewBag.Recent = await service.RecentShortenedUrls();
