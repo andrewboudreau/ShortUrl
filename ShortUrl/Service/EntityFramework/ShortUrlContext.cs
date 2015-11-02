@@ -66,6 +66,13 @@ namespace ShortUrl.Service.EntityFramework
             return Set<ShortenedUrl>().OrderByDescending(x => x.Created).Take(20).ToListAsync();
         }
 
+        /// <summary>
+        /// Add visitor data to a shortened url.
+        /// </summary>
+        /// <param name="id">Short Url Id</param>
+        /// <param name="headers">request headers</param>
+        /// <param name="userAgent">request user agent</param>
+        /// <returns></returns>
         public async Task AddVisitorAsync(int id, NameValueCollection headers, string userAgent)
         {
             var visitor = Visitors.Create();
