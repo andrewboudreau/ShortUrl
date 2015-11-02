@@ -33,9 +33,15 @@ namespace ShortUrl.Controllers
                 Url = Request.Url.Scheme + Uri.SchemeDelimiter + Request.Url.Host + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port)
             };
 
-
-            ViewBag.RegisteredSites = await coordinator.RegisterSiteAsync(site);
-            ViewBag.Recent = await service.RecentShortenedUrls();
+            try
+            {
+                ViewBag.RegisteredSites = await coordinator.RegisterSiteAsync(site);
+                ViewBag.Recent = await service.RecentShortenedUrls();
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
 
             return View();
         }
