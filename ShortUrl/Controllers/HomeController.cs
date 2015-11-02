@@ -21,6 +21,14 @@ namespace ShortUrl.Controllers
 
         public async Task<ActionResult> Index()
         {
+            ViewBag.Recent = await service.RecentShortenedUrls();
+            await RegisterSiteWithCoordinatorAsync();
+
+            return View();
+        }
+
+        private async Task RegisterSiteWithCoordinatorAsync()
+        {
             if (Request.Url == null)
             {
                 throw new NullReferenceException("Request.Url cannot be null");
@@ -36,14 +44,11 @@ namespace ShortUrl.Controllers
             try
             {
                 ViewBag.RegisteredSites = await coordinator.RegisterSiteAsync(site);
-                ViewBag.Recent = await service.RecentShortenedUrls();
             }
             catch (Exception)
             {
                 // ignored
             }
-
-            return View();
         }
     }
 }
