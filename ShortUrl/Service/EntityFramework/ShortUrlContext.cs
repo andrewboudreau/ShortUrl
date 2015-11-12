@@ -49,7 +49,7 @@ namespace ShortUrl.Service.EntityFramework
         /// <returns>The id of the shortened url</returns>
         public async Task<int> ShortenUrlAsync(string url)
         {
-            url = SanitizeUrl(url);
+            url = DefaultToHttpsProtocol(url);
             var uri = new Uri(url, UriKind.RelativeOrAbsolute);
             var request = new HttpClient().GetAsync(uri.ToString());
 
@@ -70,20 +70,6 @@ namespace ShortUrl.Service.EntityFramework
 
             await SaveChangesAsync();
             return shortUrl.Id;
-        }
-
-        /// <summary>
-        /// Get title from an HTML string.
-        /// </summary>
-        static string GetTitle(string file)
-        {
-            var m = Regex.Match(file, @"<title>\s*(.+?)\s*</title>", RegexOptions.IgnoreCase);
-            if (m.Success)
-            {
-                return m.Groups[1].Value;
-            }
-
-            return "";
         }
 
         /// <summary>
@@ -114,6 +100,17 @@ namespace ShortUrl.Service.EntityFramework
             await SaveChangesAsync();
         }
 
+        public async Task<int> ImportAsync(IEnumerable<ShortenedUrl> urls)
+        {
+            ShortenedUrls.AddRange(urls);
+            return await SaveChangesAsync();
+        }
+
+        public async Task<List<ShortenedUrl>> ExportAsync()
+        {
+            return await ShortenedUrls.Take(1000).ToListAsync();
+        }
+
         /// <summary>
         /// Shortened url details
         /// </summary>
@@ -124,7 +121,14 @@ namespace ShortUrl.Service.EntityFramework
             return Set<ShortenedUrl>().FindAsync(id);
         }
 
-        private string SanitizeUrl(string url)
+        #endregion
+
+        /// <summary>
+        /// Defaults protocol to HTTPS://
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        static string DefaultToHttpsProtocol(string url)
         {
             if (url.StartsWith("http"))
             {
@@ -133,7 +137,20 @@ namespace ShortUrl.Service.EntityFramework
 
             return "https://" + url;
         }
-        #endregion
+
+        /// <summary>
+        /// Get title from an HTML string.
+        /// </summary>
+        static string GetTitle(string file)
+        {
+            var m = Regex.Match(file, @"<title>\s*(.+?)\s*</title>", RegexOptions.IgnoreCase);
+            if (m.Success)
+            {
+                return m.Groups[1].Value;
+            }
+
+            return "";
+        }
     }
 
     public class InvalidUrlExcpetion : Exception

@@ -16,5 +16,9 @@ namespace ShortUrl.Service
         Task<List<ShortenedUrl>> RecentShortenedUrls();
         
         Task AddVisitorAsync(int id, NameValueCollection headers, string userAgent);
+
+        Task<int> ImportAsync(IEnumerable<ShortenedUrl> urls);
+
+        Task<List<ShortenedUrl>> ExportAsync();
     }
 }

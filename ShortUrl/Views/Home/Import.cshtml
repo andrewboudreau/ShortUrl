@@ -1,0 +1,11 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Import Data";
+}
+
+<h2>Upload Previous Export</h2>
+<form class="form-group" method="POST" enctype="multipart/form-data">
+    <input type="file" name="import" id="import"/>
+    <input type="submit" value="Upload" />
+</form>
