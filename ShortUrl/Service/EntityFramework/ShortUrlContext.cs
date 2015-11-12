@@ -78,7 +78,7 @@ namespace ShortUrl.Service.EntityFramework
         /// <returns></returns>
         public Task<List<ShortenedUrl>> RecentShortenedUrls()
         {
-            return Set<ShortenedUrl>().OrderByDescending(x => x.Created).Take(20).ToListAsync();
+            return Set<ShortenedUrl>().OrderByDescending(x => x.Id).Take(50).ToListAsync();
         }
 
         /// <summary>
