@@ -14,12 +14,19 @@
 @Html.Raw(Json.Encode(@ViewBag.RegisteredSites))
 -->
 
+@helper StatusIcon(int statuscode)
+{
+if (statuscode == 0){<div>PENDING</div>}
+else if (statuscode >= 200 && statuscode < 300) {<div>OK</div>}
+else {<div>Error</div>}
+}
+
 <div class="jumbotron">
     <h1>Shorten Url</h1>
     <form id="Shorten" action="@Url.Action("Index", "Shorten")" method="POST" autocomplete="off">
         <p class="lead">
             <div class="form-group">
-                @Html.TextBoxFor(m => m.Url, new { @class = "form-control", placeholder = "enter a valid url", autocomplete = "off" })
+                @Html.TextBoxFor(m => m.Url, new { @class = "form-control", placeholder = "enter a valid url", autocomplete = "off", autocorrect = "off", autocapitalize = "off", spellcheck = "false" })
                 @Html.ValidationMessageFor(m => m.Url)
             </div>
         </p>
@@ -35,6 +42,8 @@
                 <th>Url</th>
                 <th>ShortUrl</th>
                 <th>Created</th>
+                <th>Title</th>
+                <th>Status</th>
                 @*<th>Visits</th>*@
             </tr>
             @foreach (var item in ViewBag.Recent)
@@ -43,6 +52,8 @@
                     <td><a target="_blank" href="@item.Url">@item.Url</a></td>
                     <td><a target="_blank" href="@Url.Action("Index", "Expand", new { id = item.Id })">/@item.Id</a></td>
                     <td>@TimeAgoInWords(item.Created)</td>
+                    <td>@item.Title</td>
+                    <td>@StatusIcon(item.HttpStatusCode)</td>
                     @*<td>0</td>*@
                 </tr>
             }

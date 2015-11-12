@@ -183,7 +183,6 @@
     <Compile Include="Models\Visitor.cs" />
     <Compile Include="PositiveIntegerRouteConstraint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\DocumentDB\ShortUrlContainer.cs" />
     <Compile Include="Service\EntityFramework\ShortUrlContext.cs" />
     <Compile Include="Service\IShortUrlService.cs" />
   </ItemGroup>
@@ -222,7 +221,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive-bootstrap.js" />
     <Content Include="Scripts\shorturl.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

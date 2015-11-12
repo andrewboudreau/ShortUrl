@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
+using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ShortUrl.Models;
 
@@ -46,15 +49,41 @@ namespace ShortUrl.Service.EntityFramework
         /// <returns>The id of the shortened url</returns>
         public async Task<int> ShortenUrlAsync(string url)
         {
+            url = SanitizeUrl(url);
+            var uri = new Uri(url, UriKind.RelativeOrAbsolute);
+            var request = new HttpClient().GetAsync(uri.ToString());
+
             var shortUrl = ShortenedUrls.Create();
             shortUrl.Created = DateTime.UtcNow;
-            shortUrl.Url = SanitizeUrl(url);
-
+            shortUrl.Url = uri.ToString();
             ShortenedUrls.Add(shortUrl);
 
-            await SaveChangesAsync();
+            if (request.Wait(2000))
+            {
+                shortUrl.HttpStatusCode = (int)request.Result.StatusCode;
+                if (request.Result.IsSuccessStatusCode)
+                {
+                    var response = await request.Result.Content.ReadAsStringAsync();
+                    shortUrl.Title = GetTitle(response);
+                }
+            }
 
+            await SaveChangesAsync();
             return shortUrl.Id;
+        }
+
+        /// <summary>
+        /// Get title from an HTML string.
+        /// </summary>
+        static string GetTitle(string file)
+        {
+            var m = Regex.Match(file, @"<title>\s*(.+?)\s*</title>", RegexOptions.IgnoreCase);
+            if (m.Success)
+            {
+                return m.Groups[1].Value;
+            }
+
+            return "";
         }
 
         /// <summary>
@@ -102,8 +131,19 @@ namespace ShortUrl.Service.EntityFramework
                 return url;
             }
 
-            return "http://" + url;
+            return "https://" + url;
         }
         #endregion
+    }
+
+    public class InvalidUrlExcpetion : Exception
+    {
+        public InvalidUrlExcpetion(string url, string message, Exception innerException)
+            : base(message, innerException)
+        {
+            Url = url;
+        }
+
+        public string Url { get; set; }
     }
 }

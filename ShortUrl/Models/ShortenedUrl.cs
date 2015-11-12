@@ -8,6 +8,10 @@ namespace ShortUrl.Models
 
         public string Url { get; set; }
 
+        public int HttpStatusCode { get; set; }
+
+        public string Title { get; set; }
+
         public DateTime Created { get; set; }
     }
 }
