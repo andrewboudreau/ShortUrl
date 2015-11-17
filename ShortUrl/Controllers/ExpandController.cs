@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using ShortUrl.Service;
 
 namespace ShortUrl.Controllers
@@ -22,17 +24,18 @@ namespace ShortUrl.Controllers
             }
 
             await service.AddVisitorAsync(id, Request.Headers, Request.UserAgent);
-            if (url.Url.StartsWith("http"))
-            {
-                return Redirect(url.Url);
-            }
-
-            return Redirect("http://" + url.Url);
+            return Redirect(url.Url);
         }
 
-        public ActionResult Debug(int id)
+        public async Task<ActionResult> Debug(int id)
         {
-            return Content(id.ToString());
+            var url = await service.FindUrlByIdAsync(id);
+            if (url == null)
+            {
+                return HttpNotFound();
+            }
+
+            return Content(JsonConvert.SerializeObject(url));
         }
     }
 }
