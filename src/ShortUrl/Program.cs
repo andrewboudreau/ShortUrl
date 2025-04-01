@@ -1,11 +1,24 @@
+using System.Collections.Concurrent;
+
 var app = WebApplication.Create(args);
 
-var urlMap = new Dictionary<int, string>();
+var urlMap = new ConcurrentDictionary<int, string>();
+var counter = 0;
 
 app.MapGet("/shorten", (string url, HttpContext ctx) =>
-    Results.Content($"{ctx.Request.Scheme}://{ctx.Request.Host}/{urlMap.Count}", urlMap[urlMap.Count] = url));
+{
+    var id = Interlocked.Increment(ref counter) - 1;
+    urlMap.TryAdd(id, url);
+    return Results.Content($"{ctx.Request.Scheme}://{ctx.Request.Host}/{id}");
+});
 
 app.MapGet("/{id:int}", (int id) =>
-    Results.Redirect(urlMap[id]));
+{
+    if (urlMap.TryGetValue(id, out var originalUrl))
+    {
+        return Results.Redirect(originalUrl);
+    }
+    return Results.NotFound();
+});
 
 app.Run();
