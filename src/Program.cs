@@ -3,37 +3,10 @@ using System.Text.Json;
 
 var app = WebApplication.Create(args);
 
-var urlMap = new ConcurrentDictionary<int, string>();
-var counter = 1;
 var dataFile = "urls.json";
-
-// Load existing data if available
-if (File.Exists(dataFile))
-{
-    try
-    {
-        var json = File.ReadAllText(dataFile);
-        var data = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
-        
-        if (data != null)
-        {
-            counter = Convert.ToInt32(data["counter"]);
-            var urls = JsonSerializer.Deserialize<Dictionary<string, string>>(data["urls"].ToString());
-            
-            if (urls != null)
-            {
-                foreach (var pair in urls)
-                {
-                    urlMap.TryAdd(int.Parse(pair.Key), pair.Value);
-                }
-            }
-        }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Error loading data: {ex.Message}");
-    }
-}
+var urlData = LoadData();
+var urlMap = urlData.UrlMap;
+var counter = urlData.Counter;
 
 app.MapGet("/shorten", (string url, HttpContext ctx) =>
 {
@@ -41,7 +14,7 @@ app.MapGet("/shorten", (string url, HttpContext ctx) =>
     urlMap.TryAdd(id, url);
     
     // Save data after adding a new URL
-    SaveData();
+    File.WriteAllText(dataFile, JsonSerializer.Serialize(new UrlData { Counter = counter, UrlMap = urlMap }));
     
     return Results.Content($"{ctx.Request.Scheme}://{ctx.Request.Host}/{id}");
 });
@@ -51,28 +24,32 @@ app.MapGet("/{id:int}", (int id) =>
         Results.Redirect(originalUrl) :
         Results.NotFound());
 
-// Helper method to save data
-void SaveData()
+// Auto-save on shutdown
+app.Lifetime.ApplicationStopping.Register(() => 
+    File.WriteAllText(dataFile, JsonSerializer.Serialize(new UrlData { Counter = counter, UrlMap = urlMap })));
+
+// Simple data class and loader
+UrlData LoadData()
 {
-    try
+    if (File.Exists(dataFile))
     {
-        var urls = urlMap.ToDictionary(kv => kv.Key.ToString(), kv => kv.Value);
-        var data = new Dictionary<string, object>
+        try
         {
-            ["counter"] = counter,
-            ["urls"] = urls
-        };
-        
-        var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(dataFile, json);
+            return JsonSerializer.Deserialize<UrlData>(File.ReadAllText(dataFile)) 
+                ?? new UrlData();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading data: {ex.Message}");
+        }
     }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Error saving data: {ex.Message}");
-    }
+    return new UrlData();
 }
 
-// Auto-save on shutdown
-app.Lifetime.ApplicationStopping.Register(SaveData);
+class UrlData
+{
+    public int Counter { get; set; } = 1;
+    public ConcurrentDictionary<int, string> UrlMap { get; set; } = new();
+}
 
 app.Run();
