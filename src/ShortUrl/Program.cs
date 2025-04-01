@@ -1,28 +1,11 @@
-using System.Collections.Concurrent;
+var app = WebApplication.Create(args);
 
-var app = WebApplication.CreateBuilder(args).Build();
+var urlMap = new Dictionary<int, string>();
 
-ConcurrentDictionary<int, string> urlMappings = [];
-int nextId = 0;
+app.MapGet("/shorten", (string url, HttpContext ctx) =>
+    Results.Content($"{ctx.Request.Scheme}://{ctx.Request.Host}/{urlMap.Count}", urlMap[urlMap.Count] = url));
 
-app.MapGet("/shorten", (string url, HttpContext context) =>
-{
-    if (string.IsNullOrEmpty(url))
-        return Results.BadRequest("URL parameter is required");
-
-    int id = Interlocked.Increment(ref nextId);
-    urlMappings[id] = url;
-
-    var shortUrl = $"{context.Request.Scheme}://{context.Request.Host}/{id}";
-    return Results.Ok(new { shortUrl, id, url});
-});
-
-app.MapGet("/{id}", (string id) =>
-{
-    if (int.TryParse(id, out int key) && urlMappings.TryGetValue(key, out var longUrl))
-        return Results.Redirect(longUrl);
-
-    return Results.NotFound();
-});
+app.MapGet("/{id:int}", (int id) =>
+    Results.Redirect(urlMap[id]));
 
 app.Run();
